@@ -108,16 +108,31 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in client/TelemetryClient.ts:12</li>
+									<li>Defined in <a href="https://github.com/matejdr/rocos-node-sdk/blob/fa26a76/src/client/TelemetryClient.ts#L12">client/TelemetryClient.ts:12</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Create a new Telemetry client wuth a service hostnamre and a token</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>beta</dt>
+									<dd></dd>
+								</dl>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>hostname: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Hostname of the stream service.</p>
+									</div>
 								</li>
 								<li>
 									<h5>token: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The token for authorization.</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="telemetryclient.html" class="tsd-signature-type" data-tsd-kind="Class">TelemetryClient</a></h4>
@@ -137,7 +152,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in client/TelemetryClient.ts:72</li>
+									<li>Defined in <a href="https://github.com/matejdr/rocos-node-sdk/blob/fa26a76/src/client/TelemetryClient.ts#L108">client/TelemetryClient.ts:108</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -160,7 +175,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in client/TelemetryClient.ts:80</li>
+									<li>Defined in <a href="https://github.com/matejdr/rocos-node-sdk/blob/fa26a76/src/client/TelemetryClient.ts#L116">client/TelemetryClient.ts:116</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -183,22 +198,44 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in client/TelemetryClient.ts:29</li>
+									<li>Defined in <a href="https://github.com/matejdr/rocos-node-sdk/blob/fa26a76/src/client/TelemetryClient.ts#L50">client/TelemetryClient.ts:50</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Subscribe to telemetry events.</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>remarks</dt>
+									<dd><p>This is the main method for connecting service data to your application.</p>
+									</dd>
+									<dt>beta</dt>
+									<dd></dd>
+								</dl>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>projectId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>id of the project</p>
+									</div>
 								</li>
 								<li>
 									<h5>callsigns: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">CallsignsQuery</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>An array of string callsigns or a callsign query</p>
+									</div>
 								</li>
 								<li>
 									<h5>sources: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>An array of string sources</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">TelemetrySubscriber</span></h4>
+							<p>The TelemetrySubscriber or nothing if an error occurs.</p>
 						</li>
 					</ul>
 				</section>
@@ -212,16 +249,29 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in client/TelemetryClient.ts:55</li>
+									<li>Defined in <a href="https://github.com/matejdr/rocos-node-sdk/blob/fa26a76/src/client/TelemetryClient.ts#L84">client/TelemetryClient.ts:84</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Unsubscribe a telemetry event.</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>beta</dt>
+									<dd></dd>
+								</dl>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>sub: <span class="tsd-signature-type">TelemetrySubscriber</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>TelemetrySubscriber</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+							<p>void</p>
 						</li>
 					</ul>
 				</section>
@@ -235,10 +285,20 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in client/TelemetryClient.ts:65</li>
+									<li>Defined in <a href="https://github.com/matejdr/rocos-node-sdk/blob/fa26a76/src/client/TelemetryClient.ts#L101">client/TelemetryClient.ts:101</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Unsubscribe all telemetry events.</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>beta</dt>
+									<dd></dd>
+								</dl>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+							<p>void</p>
 						</li>
 					</ul>
 				</section>

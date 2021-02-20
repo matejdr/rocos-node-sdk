@@ -7,10 +7,18 @@ import * as grpc from '@grpc/grpc-js'
 
 export class TelemetryClient {
   private logger: Logger
-  private token: string
-  private grpcClient: TelemetryReceiverClient | undefined
+  private readonly token: string
+  private readonly grpcClient: TelemetryReceiverClient | undefined
   private subscribers: Array<TelemetrySubscriber> = []
 
+  /**
+   * Create a new Telemetry client wuth a service hostnamre and a token
+   *
+   * @param hostname - Hostname of the stream service.
+   * @param token - The token for authorization.
+   *
+   * @beta
+   */
   constructor(hostname: string, token: string) {
     this.logger = PrefixLogger.getInstance('TelemetryClient')
     this.token = token
@@ -26,6 +34,19 @@ export class TelemetryClient {
     }
   }
 
+  /**
+   * Subscribe to telemetry events.
+   *
+   * @remarks
+   * This is the main method for connecting service data to your application.
+   *
+   * @param projectId - id of the project
+   * @param callsigns - An array of string callsigns or a callsign query
+   * @param sources - An array of string sources
+   * @returns The TelemetrySubscriber or nothing if an error occurs.
+   *
+   * @beta
+   */
   public subscribe = (
     projectId: string,
     callsigns: string[] | CallsignsQuery,
@@ -52,6 +73,14 @@ export class TelemetryClient {
     return sub
   }
 
+  /**
+   * Unsubscribe a telemetry event.
+   *
+   * @param sub - TelemetrySubscriber
+   * @returns void
+   *
+   * @beta
+   */
   public unsubscribe = (sub: TelemetrySubscriber) => {
     this.logger.info('unsubscribing', sub)
     const foundSubscriber = this.subscribers.indexOf(sub)
@@ -62,6 +91,13 @@ export class TelemetryClient {
     }
   }
 
+  /**
+   * Unsubscribe all telemetry events.
+   *
+   * @returns void
+   *
+   * @beta
+   */
   public unsubscribeAll = () => {
     this.logger.info('unsubscribing all')
     this.subscribers.forEach(subscriber => {
