@@ -5,6 +5,8 @@ import { CallsignsLookup, CallsignsLookupType } from '../Callsigns'
 import { PrefixLogger } from '../PrefixLogger'
 import { TelemetryActionRunnerList } from './TelemetryActionRunnerList'
 import { TelemetryActionRunnerQuery } from './TelemetryActionRunnerQuery'
+import { Subject } from 'rxjs'
+import { CustomTelemetryMessage } from '../CustomTelemetryMessage'
 
 export type telemetryActionType = 'subscribe' | 'unsubscribe'
 
@@ -21,7 +23,8 @@ export class TelemetryActionRunner {
     grpcClient: TelemetryReceiverClient,
     metadata: Metadata,
     subscriberId: string | undefined,
-    projectId: string
+    projectId: string,
+    subject: Subject<CustomTelemetryMessage>
   ) => {
     if (!subscriberId || !projectId) {
       this.logger.warn(
@@ -41,7 +44,8 @@ export class TelemetryActionRunner {
         callsigns,
         grpcClient,
         metadata,
-        subscriberId
+        subscriberId,
+        subject
       )
     } else if (callsigns.lookupType === CallsignsLookupType.Query) {
       new TelemetryActionRunnerQuery().run(
@@ -50,7 +54,8 @@ export class TelemetryActionRunner {
         callsigns,
         grpcClient,
         metadata,
-        subscriberId
+        subscriberId,
+        subject
       )
     }
 

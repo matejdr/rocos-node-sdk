@@ -14,6 +14,9 @@ import {
 } from '../Callsigns'
 import { PrefixLogger } from '../PrefixLogger'
 import { telemetryActionType } from './TelemetryActionRunner'
+import { Subject } from 'rxjs'
+import { CustomTelemetryMessage } from '../CustomTelemetryMessage'
+import { errorCodes, TelemetryError } from '../TelemetryError'
 
 export class TelemetryActionRunnerQuery {
   logger: Logger
@@ -27,7 +30,8 @@ export class TelemetryActionRunnerQuery {
     callsigns: CallsignsLookup,
     grpcClient: TelemetryReceiverClient,
     metadata: Metadata,
-    subscriberId: string
+    subscriberId: string,
+    subject: Subject<CustomTelemetryMessage>
   ) => {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this
@@ -55,6 +59,12 @@ export class TelemetryActionRunnerQuery {
       grpcClient.requestTelemetryQuery(req, metadata, (err, ack) => {
         if (err) {
           self.logger.error('grpcClient.requestTelemetry Query', err)
+          subject.error(
+            TelemetryError.createFromGrpcClient(
+              errorCodes.GRPC_CLIENT_ERROR,
+              err
+            )
+          )
         }
       })
     }

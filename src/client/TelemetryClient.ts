@@ -1,9 +1,10 @@
 import { Logger, LogLevelDesc } from 'loglevel'
+import { credentials } from '@grpc/grpc-js'
 import { PrefixLogger } from './PrefixLogger'
 import { TelemetryReceiverClient } from '../grpc/teletubby_grpc_pb'
 import { TelemetrySubscriber } from './TelemetrySubscriber'
 import { CallsignsLookup, CallsignsQuery } from './Callsigns'
-import * as grpc from '@grpc/grpc-js'
+import { TelemetryError, errorCodes } from './TelemetryError'
 
 export class TelemetryClient {
   private logger: Logger
@@ -26,11 +27,12 @@ export class TelemetryClient {
       this.grpcClient = new TelemetryReceiverClient(
         hostname,
         // TODO: do not know how you do authentication
-        grpc.credentials.createInsecure()
+        credentials.createInsecure()
       )
     } catch (e) {
       this.logger.error('client can not be created')
       this.logger.debug(e)
+      throw TelemetryError.createFromError(errorCodes.CLIENT_ERROR, e)
     }
   }
 
@@ -52,12 +54,11 @@ export class TelemetryClient {
     callsigns: string[] | CallsignsQuery,
     sources: Array<string>
   ) => {
+    this.logger.info('subscribe with callsigns')
     if (!this.grpcClient) {
       this.logger.error('client does not exist')
-      return
+      throw new TelemetryError(errorCodes.CLIENT_ERROR, 'client does not exist')
     }
-    this.logger.info('subscribe with callsigns')
-
     const sub = new TelemetrySubscriber(
       projectId,
       sources,
@@ -107,9 +108,9 @@ export class TelemetryClient {
 
   public enableDebugMode = (on = true) => {
     if (on) {
-      this.logger.enableAll()
+      PrefixLogger.enableAll()
     } else {
-      this.logger.disableAll()
+      PrefixLogger.disableAll()
     }
   }
 

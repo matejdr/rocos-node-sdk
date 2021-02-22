@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc && cp -r ./src/grpc/ ./dist/grpc",
     "docs": "typedoc",
-    "lint": "eslint 'src/**/*.{ts,tsx}' --quiet --fix"
+    "lint": "eslint 'src/**/*.{ts,tsx}' --quiet --fix",
+    "test": "jest"
   },
   "keywords": [
     "sdk",
@@ -16,14 +17,18 @@
   "author": "me",
   "license": "MIT",
   "devDependencies": {
+    "@grpc/proto-loader": "^0.5.6",
     "@types/google-protobuf": "^3.7.4",
+    "@types/jest": "^26.0.20",
     "@typescript-eslint/eslint-plugin": "^4.15.1",
     "@typescript-eslint/parser": "^4.15.1",
     "eslint": "^7.20.0",
     "eslint-config-prettier": "^7.2.0",
     "eslint-plugin-prettier": "^3.3.1",
     "grpc-tools": "^1.10.0",
+    "jest": "^26.6.3",
     "prettier": "^2.2.1",
+    "ts-jest": "^26.5.1",
     "ts-protoc-gen": "^0.14.0",
     "typedoc": "^0.20.25",
     "typescript": "^4.1.5"

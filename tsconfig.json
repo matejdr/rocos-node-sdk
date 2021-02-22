@@ -69,7 +69,8 @@
   },
   "exclude": [
     "dist",
-    "demo"
+    "demo",
+    "__tests__"
   ],
   "typedocOptions": {
     "entryPoints": ["src/index.ts"],

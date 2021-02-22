@@ -11,6 +11,7 @@ import { PrefixLogger } from './PrefixLogger'
 import { CustomTelemetryMessage } from './CustomTelemetryMessage'
 import { CallsignsLookup, CallsignsQuery } from './Callsigns'
 import { TelemetryActionRunner } from './TelemetryActionRunner/TelemetryActionRunner'
+import { TelemetryError, errorCodes } from './TelemetryError'
 
 export class TelemetrySubscriber {
   logger: Logger
@@ -50,8 +51,14 @@ export class TelemetrySubscriber {
     const self = this
     const call = this.grpcClient.registerStreamReceiver(this.metadata)
     call.on('data', function (msg: TelemetryMessage) {
-      const message = new CustomTelemetryMessage(msg)
-      self.onData(message)
+      try {
+        const message = new CustomTelemetryMessage(msg)
+        self.onData(message)
+      } catch (e) {
+        self.subject.error(
+          TelemetryError.createFromError(errorCodes.STREAM_ERROR, e)
+        )
+      }
     })
     call.on('status', status => {
       self.logger.debug('registerStreamReceiver', 'status', status)
@@ -59,13 +66,19 @@ export class TelemetrySubscriber {
     call.on('end', (status: any) => {
       self.logger.debug('registerStreamReceiver', 'end', status)
     })
+    call.on('error', function (error) {
+      self.logger.error('registerStreamReceiver', 'error', error)
+      self.subject.error(
+        TelemetryError.createFromError(errorCodes.STREAM_ERROR, error)
+      )
+    })
     this.activeCall = call
     return function () {
       call.cancel()
     }
   }
 
-  private onData = (message: CustomTelemetryMessage) => {
+  public onData = (message: CustomTelemetryMessage) => {
     const source = message.source
     const callsign = message.callsign
     let isRobotMessage = true
@@ -83,7 +96,8 @@ export class TelemetrySubscriber {
           this.grpcClient,
           this.metadata,
           this.subscriberId,
-          this.projectId
+          this.projectId,
+          this.subject
         )
         isRobotMessage = false
         break
@@ -96,9 +110,7 @@ export class TelemetrySubscriber {
     }
 
     if (this.isRegisteredMessage(callsign, source)) {
-      if (this.subject) {
-        this.subject.next(message)
-      }
+      this.subject.next(message)
     } else {
       if (isRobotMessage) {
         // All messages received should be subscribed.
@@ -108,6 +120,12 @@ export class TelemetrySubscriber {
           callsigns: this.callsigns,
           sources: this.sources,
         })
+        this.subject.error(
+          new TelemetryError(
+            errorCodes.SUBSCRIBER_ERROR,
+            'No subscriber exists'
+          )
+        )
       }
     }
   }
@@ -132,7 +150,8 @@ export class TelemetrySubscriber {
       this.grpcClient,
       this.metadata,
       this.subscriberId,
-      this.projectId
+      this.projectId,
+      this.subject
     )
     if (this.activeCall) {
       this.activeCall.cancel()

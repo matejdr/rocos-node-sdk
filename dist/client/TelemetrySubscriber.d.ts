@@ -17,7 +17,7 @@ export declare class TelemetrySubscriber {
     subscriberId: string | undefined;
     constructor(projectId: string, sources: Array<string>, callsigns: CallsignsLookup, token: string, grpcClient: TelemetryReceiverClient);
     private registerStreamReceiver;
-    private onData;
+    onData: (message: CustomTelemetryMessage) => void;
     private isRegisteredMessage;
     unsubscribe: () => void;
 }

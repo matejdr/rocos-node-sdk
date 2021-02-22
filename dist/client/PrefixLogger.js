@@ -21,6 +21,12 @@ var PrefixLogger = /** @class */ (function () {
         }
         return loglevel_1.default;
     };
+    PrefixLogger.enableAll = function () {
+        loglevel_1.default.enableAll();
+    };
+    PrefixLogger.disableAll = function () {
+        loglevel_1.default.disableAll();
+    };
     return PrefixLogger;
 }());
 exports.PrefixLogger = PrefixLogger;

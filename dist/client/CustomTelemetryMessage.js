@@ -6,7 +6,9 @@ var CustomTelemetryMessage = /** @class */ (function () {
         this.callsign = msg.getCallsign();
         this.source = msg.getSource();
         this.type = 'json';
-        this.payload = JSON.parse(msg.getPayload_asB64());
+        this.payload = msg.getPayload_asB64()
+            ? JSON.parse(msg.getPayload_asB64())
+            : undefined;
         this.createdAt = msg.getCreated();
         this.receivedAt = new Date();
     }

@@ -17,4 +17,10 @@ export class PrefixLogger {
 
     return log
   }
+  public static enableAll() {
+    log.enableAll()
+  }
+  public static disableAll() {
+    log.disableAll()
+  }
 }

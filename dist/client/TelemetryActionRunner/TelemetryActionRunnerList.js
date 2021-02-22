@@ -4,10 +4,11 @@ exports.TelemetryActionRunnerList = void 0;
 var teletubby_pb_1 = require("../../grpc/teletubby_pb");
 var Callsigns_1 = require("../Callsigns");
 var PrefixLogger_1 = require("../PrefixLogger");
+var TelemetryError_1 = require("../TelemetryError");
 var TelemetryActionRunnerList = /** @class */ (function () {
     function TelemetryActionRunnerList() {
         var _this = this;
-        this.run = function (actionType, sources, callsigns, grpcClient, metadata, subscriberId) {
+        this.run = function (actionType, sources, callsigns, grpcClient, metadata, subscriberId, subject) {
             // eslint-disable-next-line @typescript-eslint/no-this-alias
             var self = _this;
             if (callsigns.lookupType === Callsigns_1.CallsignsLookupType.List) {
@@ -25,6 +26,7 @@ var TelemetryActionRunnerList = /** @class */ (function () {
                 grpcClient.requestTelemetry(req, metadata, function (err, ack) {
                     if (err) {
                         self.logger.error('grpcClient.requestTelemetry List', err);
+                        subject.error(TelemetryError_1.TelemetryError.createFromGrpcClient(TelemetryError_1.errorCodes.GRPC_CLIENT_ERROR, err));
                     }
                 });
             }

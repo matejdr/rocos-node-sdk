@@ -7,6 +7,7 @@ var PrefixLogger_1 = require("./PrefixLogger");
 var CustomTelemetryMessage_1 = require("./CustomTelemetryMessage");
 var Callsigns_1 = require("./Callsigns");
 var TelemetryActionRunner_1 = require("./TelemetryActionRunner/TelemetryActionRunner");
+var TelemetryError_1 = require("./TelemetryError");
 var TelemetrySubscriber = /** @class */ (function () {
     function TelemetrySubscriber(projectId, sources, callsigns, token, grpcClient) {
         var _this = this;
@@ -16,14 +17,23 @@ var TelemetrySubscriber = /** @class */ (function () {
             var self = _this;
             var call = _this.grpcClient.registerStreamReceiver(_this.metadata);
             call.on('data', function (msg) {
-                var message = new CustomTelemetryMessage_1.CustomTelemetryMessage(msg);
-                self.onData(message);
+                try {
+                    var message = new CustomTelemetryMessage_1.CustomTelemetryMessage(msg);
+                    self.onData(message);
+                }
+                catch (e) {
+                    self.subject.error(TelemetryError_1.TelemetryError.createFromError(TelemetryError_1.errorCodes.STREAM_ERROR, e));
+                }
             });
             call.on('status', function (status) {
                 self.logger.debug('registerStreamReceiver', 'status', status);
             });
             call.on('end', function (status) {
                 self.logger.debug('registerStreamReceiver', 'end', status);
+            });
+            call.on('error', function (error) {
+                self.logger.error('registerStreamReceiver', 'error', error);
+                self.subject.error(TelemetryError_1.TelemetryError.createFromError(TelemetryError_1.errorCodes.STREAM_ERROR, error));
             });
             _this.activeCall = call;
             return function () {
@@ -39,7 +49,7 @@ var TelemetrySubscriber = /** @class */ (function () {
                 case '/rocos/agent/telemetry/subscribed':
                     var json = message.payload;
                     _this.subscriberId = json.subscriberId;
-                    new TelemetryActionRunner_1.TelemetryActionRunner().run('subscribe', _this.sources, _this.callsigns, _this.grpcClient, _this.metadata, _this.subscriberId, _this.projectId);
+                    new TelemetryActionRunner_1.TelemetryActionRunner().run('subscribe', _this.sources, _this.callsigns, _this.grpcClient, _this.metadata, _this.subscriberId, _this.projectId, _this.subject);
                     isRobotMessage = false;
                     break;
                 case '/rocos/agent/telemetry/noop':
@@ -50,9 +60,7 @@ var TelemetrySubscriber = /** @class */ (function () {
                     break;
             }
             if (_this.isRegisteredMessage(callsign, source)) {
-                if (_this.subject) {
-                    _this.subject.next(message);
-                }
+                _this.subject.next(message);
             }
             else {
                 if (isRobotMessage) {
@@ -63,6 +71,7 @@ var TelemetrySubscriber = /** @class */ (function () {
                         callsigns: _this.callsigns,
                         sources: _this.sources,
                     });
+                    _this.subject.error(new TelemetryError_1.TelemetryError(TelemetryError_1.errorCodes.SUBSCRIBER_ERROR, 'No subscriber exists'));
                 }
             }
         };
@@ -79,7 +88,7 @@ var TelemetrySubscriber = /** @class */ (function () {
         };
         this.unsubscribe = function () {
             _this.logger.info('unsubscribe');
-            new TelemetryActionRunner_1.TelemetryActionRunner().run('unsubscribe', _this.sources, _this.callsigns, _this.grpcClient, _this.metadata, _this.subscriberId, _this.projectId);
+            new TelemetryActionRunner_1.TelemetryActionRunner().run('unsubscribe', _this.sources, _this.callsigns, _this.grpcClient, _this.metadata, _this.subscriberId, _this.projectId, _this.subject);
             if (_this.activeCall) {
                 _this.activeCall.cancel();
                 _this.activeCall = undefined;

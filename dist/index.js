@@ -11,3 +11,6 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./client/TelemetryClient"), exports);
+__exportStar(require("./client/TelemetryError"), exports);
+__exportStar(require("./client/TelemetrySubscriber"), exports);
+__exportStar(require("./client/CustomTelemetryMessage"), exports);

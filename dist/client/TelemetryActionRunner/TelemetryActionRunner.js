@@ -8,7 +8,7 @@ var TelemetryActionRunnerQuery_1 = require("./TelemetryActionRunnerQuery");
 var TelemetryActionRunner = /** @class */ (function () {
     function TelemetryActionRunner() {
         var _this = this;
-        this.run = function (actionType, sources, callsigns, grpcClient, metadata, subscriberId, projectId) {
+        this.run = function (actionType, sources, callsigns, grpcClient, metadata, subscriberId, projectId, subject) {
             if (!subscriberId || !projectId) {
                 _this.logger.warn(actionType, 'without subscriberId or projectId - message will not send out', {
                     subscriberId: subscriberId,
@@ -17,10 +17,10 @@ var TelemetryActionRunner = /** @class */ (function () {
                 return;
             }
             if (callsigns.lookupType === Callsigns_1.CallsignsLookupType.List) {
-                new TelemetryActionRunnerList_1.TelemetryActionRunnerList().run(actionType, sources, callsigns, grpcClient, metadata, subscriberId);
+                new TelemetryActionRunnerList_1.TelemetryActionRunnerList().run(actionType, sources, callsigns, grpcClient, metadata, subscriberId, subject);
             }
             else if (callsigns.lookupType === Callsigns_1.CallsignsLookupType.Query) {
-                new TelemetryActionRunnerQuery_1.TelemetryActionRunnerQuery().run(actionType, sources, callsigns, grpcClient, metadata, subscriberId);
+                new TelemetryActionRunnerQuery_1.TelemetryActionRunnerQuery().run(actionType, sources, callsigns, grpcClient, metadata, subscriberId, subject);
             }
             _this.logger.debug(actionType, 'grpcClient.requestTelemetry', subscriberId);
         };
