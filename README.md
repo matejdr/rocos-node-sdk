@@ -23,9 +23,10 @@ const client = new TelemetryClient(baseURL, token)
 const subscriber = client.subscribe(projectId, callsigns, sources)
 
 try {
-   subscriber.subject.subscribe(msg => {
-      console.log('msg', msg)
-   })
+   subscriber.subject.subscribe(
+           msg => console.log('msg', msg),
+           err => console.log('err', err)
+   )
 
    client.unsubscribe(subscriber)
 
