@@ -22,7 +22,7 @@ var TelemetrySubscriber = /** @class */ (function () {
                     self.onData(message);
                 }
                 catch (e) {
-                    self.subject.error(TelemetryError_1.TelemetryError.createFromError(TelemetryError_1.errorCodes.STREAM_ERROR, e));
+                    self.subject.error(new TelemetryError_1.TelemetryError(TelemetryError_1.errorCodes.STREAM_ERROR, e));
                 }
             });
             call.on('status', function (status) {
@@ -33,7 +33,7 @@ var TelemetrySubscriber = /** @class */ (function () {
             });
             call.on('error', function (error) {
                 self.logger.error('registerStreamReceiver', 'error', error);
-                self.subject.error(TelemetryError_1.TelemetryError.createFromError(TelemetryError_1.errorCodes.STREAM_ERROR, error));
+                self.subject.error(new TelemetryError_1.TelemetryError(TelemetryError_1.errorCodes.STREAM_ERROR, error));
             });
             _this.activeCall = call;
             return function () {
@@ -95,7 +95,7 @@ var TelemetrySubscriber = /** @class */ (function () {
             }
         };
         this.logger = PrefixLogger_1.PrefixLogger.getInstance('TelemetrySubscriber');
-        this.projectId = token;
+        this.projectId = projectId;
         this.sources = sources;
         this.callsigns = callsigns;
         this.grpcClient = grpcClient;

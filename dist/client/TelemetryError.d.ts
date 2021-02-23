@@ -8,7 +8,6 @@ export declare const errorCodes: {
 export declare class TelemetryError extends Error {
     code: string;
     extraData?: any;
-    constructor(code: string, message?: string);
+    constructor(code: string, err?: string | Error);
     static createFromGrpcClient(code: string, err: ServiceError): TelemetryError;
-    static createFromError(code: string, err: Error): TelemetryError;
 }

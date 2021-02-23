@@ -32,7 +32,7 @@ export class TelemetryClient {
     } catch (e) {
       this.logger.error('client can not be created')
       this.logger.debug(e)
-      throw TelemetryError.createFromError(errorCodes.CLIENT_ERROR, e)
+      throw new TelemetryError(errorCodes.CLIENT_ERROR, e)
     }
   }
 

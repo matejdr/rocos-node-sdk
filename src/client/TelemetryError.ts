@@ -9,8 +9,14 @@ export const errorCodes = {
 export class TelemetryError extends Error {
   code: string
   extraData?: any
-  constructor(code: string, message?: string) {
-    super(message)
+  constructor(code: string, err?: string | Error) {
+    if (err instanceof Error) {
+      super(err.message)
+      this.name = err.name
+      this.stack = err.stack
+    } else {
+      super(err)
+    }
     this.code = code
   }
 
@@ -24,13 +30,6 @@ export class TelemetryError extends Error {
       metadata: err.metadata,
     }
 
-    return error
-  }
-
-  public static createFromError(code: string, err: Error) {
-    const error = new TelemetryError(code, err.message)
-    error.name = err.name
-    error.stack = err.stack
     return error
   }
 }

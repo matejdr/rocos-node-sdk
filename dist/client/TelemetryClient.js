@@ -96,7 +96,7 @@ var TelemetryClient = /** @class */ (function () {
         catch (e) {
             this.logger.error('client can not be created');
             this.logger.debug(e);
-            throw TelemetryError_1.TelemetryError.createFromError(TelemetryError_1.errorCodes.CLIENT_ERROR, e);
+            throw new TelemetryError_1.TelemetryError(TelemetryError_1.errorCodes.CLIENT_ERROR, e);
         }
     }
     return TelemetryClient;

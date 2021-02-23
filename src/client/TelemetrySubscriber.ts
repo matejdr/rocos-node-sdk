@@ -34,7 +34,7 @@ export class TelemetrySubscriber {
     grpcClient: TelemetryReceiverClient
   ) {
     this.logger = PrefixLogger.getInstance('TelemetrySubscriber')
-    this.projectId = token
+    this.projectId = projectId
     this.sources = sources
     this.callsigns = callsigns
     this.grpcClient = grpcClient
@@ -56,7 +56,7 @@ export class TelemetrySubscriber {
         self.onData(message)
       } catch (e) {
         self.subject.error(
-          TelemetryError.createFromError(errorCodes.STREAM_ERROR, e)
+          new TelemetryError(errorCodes.STREAM_ERROR, e)
         )
       }
     })
@@ -69,7 +69,7 @@ export class TelemetrySubscriber {
     call.on('error', function (error) {
       self.logger.error('registerStreamReceiver', 'error', error)
       self.subject.error(
-        TelemetryError.createFromError(errorCodes.STREAM_ERROR, error)
+        new TelemetryError(errorCodes.STREAM_ERROR, error)
       )
     })
     this.activeCall = call

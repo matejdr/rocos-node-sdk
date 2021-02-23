@@ -22,8 +22,16 @@ exports.errorCodes = {
 };
 var TelemetryError = /** @class */ (function (_super) {
     __extends(TelemetryError, _super);
-    function TelemetryError(code, message) {
-        var _this = _super.call(this, message) || this;
+    function TelemetryError(code, err) {
+        var _this = this;
+        if (err instanceof Error) {
+            _this = _super.call(this, err.message) || this;
+            _this.name = err.name;
+            _this.stack = err.stack;
+        }
+        else {
+            _this = _super.call(this, err) || this;
+        }
         _this.code = code;
         return _this;
     }
@@ -36,12 +44,6 @@ var TelemetryError = /** @class */ (function (_super) {
             details: err.details,
             metadata: err.metadata,
         };
-        return error;
-    };
-    TelemetryError.createFromError = function (code, err) {
-        var error = new TelemetryError(code, err.message);
-        error.name = err.name;
-        error.stack = err.stack;
         return error;
     };
     return TelemetryError;
